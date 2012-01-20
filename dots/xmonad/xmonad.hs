@@ -12,8 +12,12 @@ myManageHook = composeAll (
     ])
 
 
+
+myModMask       = mod4Mask
+
 main = xmonad $ gnomeConfig
-        { manageHook = myManageHook
+        { manageHook = myManageHook,
+          modMask    = myModMask
         }
         `additionalKeysP`
                   [ ("M-p",  spawn "gmrun")
