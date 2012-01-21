@@ -21,6 +21,7 @@ myModMask       = mod4Mask
 
 main = do
     xmproc <- spawnPipe "xmobar"
+    -- xmproc <- spawnPipe "gnome-settings-manager"
     xmonad $ defaultConfig
         { manageHook = manageDocks <+> manageHook defaultConfig
         , layoutHook = avoidStruts  $  layoutHook defaultConfig
