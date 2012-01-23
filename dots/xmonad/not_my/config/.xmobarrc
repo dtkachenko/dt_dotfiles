@@ -1,0 +1,14 @@
+Config { font = "-*-terminus-medium-r-normal-*-14-*-*-*-*-*-*"
+       , bgColor = "#4d4d4d"
+       , fgColor = "grey"
+       , position = Top
+       , commands = [ Run Network "eth0" ["-L","0","-H","300","--normal","green","--high","orange"] 10
+                    , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Date "%a %b %_d %H:%M" "date" 100
+                    , Run PipeReader "/home/ilya/.xmonad/status" "xlog"
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " %xlog% }{ <fc=green>%date%</fc>"
+       }

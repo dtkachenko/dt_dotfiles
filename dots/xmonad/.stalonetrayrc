@@ -1,0 +1,8 @@
+#background "#4d4d4d"
+background "#000000"
+#transparent true
+geometry 13x1+1161+0
+icon_size 1
+grow_gravity E
+icon_gravity E
+

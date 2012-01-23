@@ -1,0 +1,32 @@
+alignment top_right
+background yes
+border_width 1
+cpu_avg_samples 2
+default_color white
+default_outline_color white
+default_shade_color white
+draw_borders no
+draw_graph_borders yes
+draw_outline no
+draw_shades no
+font -*-terminus-medium-r-normal-*-14-*-*-*-*-*-*
+gap_x 250
+gap_y 2
+minimum_size 400 15
+net_avg_samples 2
+no_buffers yes
+out_to_console no
+own_window yes
+own_window_transparent	yes
+own_window_class Conky
+own_window_type normal
+stippled_borders 0
+update_interval 3.0
+uppercase no
+use_spacer none
+show_graph_scale no
+show_graph_range no
+
+
+TEXT
+${color grey} hdd: ${color}${fs_free /}${color grey} T: ${color}${acpitemp}C ${color grey}Batt: ${color orange}${execibar 100 acpi | /home/ilya/src/Haskell/acpif} 
