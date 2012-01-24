@@ -38,6 +38,8 @@ main = do
         , modMask = myModMask
         } `additionalKeysP`
                   [ ("M-p",  spawn "gmrun")
+                  --, ("M-l",  spawn "xscreensaver-command -lock")
+                  , ("M-s", spawn "/usr/bin/skype-single-instance")
                   ]
 
 
