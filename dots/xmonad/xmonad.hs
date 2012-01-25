@@ -7,6 +7,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import System.IO
 import XMonad.Util.Run
+import qualified XMonad.StackSet as W
 
 -- myManageHook = composeAll (
 --    [ manageHook gnomeConfig
@@ -19,8 +20,11 @@ myManageHook = composeAll (
     [ manageHook defaultConfig
     , className =? "stalonetray"    --> doIgnore
     , isFullscreen --> doFullFloat
+    , className =? "Skype" --> doF (W.shift "im")
+    , className =? "Firefox" --> doF (W.shift "web")
     ])
 
+myworkspaces = ["main", "web", "im", "term", "media", "6", "7", "8", "9" ]
 
 myModMask       = mod4Mask
 
@@ -30,7 +34,10 @@ main = do
     xmonad $ defaultConfig
         { manageHook = manageDocks <+> myManageHook
          --{ manageHook = manageDocks <+> manageHook defaultConfig
+        , normalBorderColor = "#D3D7CF"
+        , focusedBorderColor = "#729FCF"
         , layoutHook = avoidStruts  $  layoutHook defaultConfig
+        , workspaces = myworkspaces
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = hPutStrLn xmproc
                         , ppTitle = xmobarColor "green" "" . shorten 50
@@ -38,7 +45,6 @@ main = do
         , modMask = myModMask
         } `additionalKeysP`
                   [ ("M-p",  spawn "gmrun")
-                  --, ("M-l",  spawn "xscreensaver-command -lock")
                   , ("M-C-k", spawn "/usr/bin/skype-single-instance")
                   ]
 
