@@ -1,8 +1,9 @@
 #background "#4d4d4d"
 background "#000000"
 #transparent true
-geometry 13x1+1161+0
-icon_size 1
-grow_gravity E
+geometry 12x1-0+0
+icon_size 16
+grow_gravity W
 icon_gravity E
-
+kludges force_icons_size
+window_layer bottom

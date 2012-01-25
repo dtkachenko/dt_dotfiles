@@ -16,7 +16,7 @@ xsetroot -solid midnightblue
 
 # Fire up apps
 
-#gnome-settings-daemon &
+gnome-settings-daemon &
 
 xscreensaver -no-splash &
 

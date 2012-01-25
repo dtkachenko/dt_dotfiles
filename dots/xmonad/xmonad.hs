@@ -39,7 +39,7 @@ main = do
         } `additionalKeysP`
                   [ ("M-p",  spawn "gmrun")
                   --, ("M-l",  spawn "xscreensaver-command -lock")
-                  , ("M-s", spawn "/usr/bin/skype-single-instance")
+                  , ("M-C-k", spawn "/usr/bin/skype-single-instance")
                   ]
 
 
