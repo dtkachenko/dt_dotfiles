@@ -21,7 +21,7 @@ myManageHook = composeAll (
     , className =? "stalonetray"    --> doIgnore
     , isFullscreen --> doFullFloat
     , className =? "Skype" --> doF (W.shift "im")
-    , className =? "Firefox" --> doF (W.shift "web")
+    , className =? "Firefox-bin" --> doF (W.shift "web")
     ])
 
 myworkspaces = ["main", "web", "im", "term", "media", "6", "7", "8", "9" ]
