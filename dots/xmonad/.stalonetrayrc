@@ -1,7 +1,7 @@
 #background "#4d4d4d"
 background "#000000"
 #transparent true
-geometry 12x1-0+0
+geometry 5x1-0+0
 icon_size 16
 grow_gravity W
 icon_gravity E

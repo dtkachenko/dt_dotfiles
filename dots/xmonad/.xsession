@@ -18,7 +18,7 @@ xsetroot -solid midnightblue
 
 gnome-settings-daemon &
 
-xscreensaver -no-splash &
+#xscreensaver -no-splash &
 
 if [ -x /usr/bin/nm-applet ] ; then
    nm-applet --sm-disable &
