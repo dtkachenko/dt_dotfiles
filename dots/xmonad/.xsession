@@ -12,7 +12,8 @@ stalonetray &
 # --expand true --width 10 --transparent true --tint 0x191970 --height 12 &
 # Set the background color<
 
-xsetroot -solid midnightblue
+#xsetroot -solid midnightblue
+xsetroot -solid gray
 
 # Fire up apps
 

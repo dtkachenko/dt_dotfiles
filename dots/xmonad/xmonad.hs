@@ -20,11 +20,12 @@ myManageHook = composeAll (
     [ manageHook defaultConfig
     , className =? "stalonetray"    --> doIgnore
     , isFullscreen --> doFullFloat
-    , className =? "Skype" --> doF (W.shift "im")
-    , className =? "Firefox-bin" --> doF (W.shift "web")
+    , className =? "Skype" --> doF (W.shift "3:im")
+    , className =? "Firefox-bin" --> doF (W.shift "2:web")
+    , className =? "Firefox" --> doF (W.shift "2:web")
     ])
 
-myworkspaces = ["main", "web", "im", "term", "media", "6", "7", "8", "9" ]
+myworkspaces = ["1:main", "2:web", "3:im", "4:term", "5:media", "6", "7", "8", "9" ]
 
 myModMask       = mod4Mask
 
@@ -36,6 +37,8 @@ main = do
          --{ manageHook = manageDocks <+> manageHook defaultConfig
         , normalBorderColor = "#D3D7CF"
         , focusedBorderColor = "#729FCF"
+        -- , focusedBorderColor = "#fecb65"
+        , borderWidth = 3
         , layoutHook = avoidStruts  $  layoutHook defaultConfig
         , workspaces = myworkspaces
         , logHook = dynamicLogWithPP xmobarPP

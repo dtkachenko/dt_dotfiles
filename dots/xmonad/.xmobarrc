@@ -11,5 +11,5 @@ Config { font = "-misc-fixed-*-*-*-*-13-*-*-*-*-*-*-*"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% | %wlan0% | %date%"
+       , template = "%StdinReader% }{ %cpu% | %memory% | %wlan0% | %date% "
        }
