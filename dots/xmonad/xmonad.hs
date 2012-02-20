@@ -8,6 +8,7 @@ import XMonad.Hooks.ManageDocks
 import System.IO
 import XMonad.Util.Run
 import qualified XMonad.StackSet as W
+import XMonad.Hooks.SetWMName
 
 -- myManageHook = composeAll (
 --    [ manageHook gnomeConfig
@@ -35,9 +36,11 @@ main = do
     xmonad $ defaultConfig
         { manageHook = manageDocks <+> myManageHook
          --{ manageHook = manageDocks <+> manageHook defaultConfig
-        , normalBorderColor = "#D3D7CF"
-        , focusedBorderColor = "#729FCF"
+        -- , normalBorderColor = "#D3D7CF"
+        -- , focusedBorderColor = "#729FCF"
         -- , focusedBorderColor = "#fecb65"
+        , terminal = "gnome-terminal"
+        , startupHook = setWMName "LG3D"
         , borderWidth = 3
         , layoutHook = avoidStruts  $  layoutHook defaultConfig
         , workspaces = myworkspaces
