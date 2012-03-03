@@ -1,0 +1,13 @@
+[gui]
+[user]
+	name = Dmitriy Tkachenko
+	email = dtkachenko@mirantis.com
+[color]
+	branch = auto
+	status = auto
+	diff = auto
+[svn]
+	rmdir = true
+[core]
+	autocrlf = input
+	safecrlf = true
