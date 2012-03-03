@@ -139,22 +139,28 @@ separator.image = image(beautiful.widget_sep)
 -- Initialize widget
 memwidget = widget({ type = "textbox" })
 -- Register widget
-vicious.register(memwidget, vicious.widgets.mem, "$1% ($2MB/$3MB)", 13)
+-- vicious.register(memwidget, vicious.widgets.mem, " Mem: $1% ($2MB/$3MB)", 13)
+vicious.register(memwidget, vicious.widgets.mem, " Mem: $1% ", 13)
 
---- { Memory usage
-memicon = widget({ type = "imagebox" })
-memicon.image = image(beautiful.widget_mem)
+
+
 -- Initialize widget
-membar = awful.widget.progressbar()
--- Pogressbar properties
-membar:set_vertical(true):set_ticks(true)
-membar:set_height(12):set_width(8):set_ticks_size(2)
-membar:set_background_color(beautiful.fg_off_widget)
-membar:set_gradient_colors({ beautiful.fg_widget,
-   beautiful.fg_center_widget, beautiful.fg_end_widget
-   }) -- Register widget
-   vicious.register(membar, vicious.widgets.mem, "$1", 13)
--- }}}
+cpuwidget = widget({ type = "textbox" })
+-- Register widget
+vicious.register(cpuwidget, vicious.widgets.cpu, " Cpu: $1% ")
+
+-- Initialize widget
+datewidget = widget({ type = "textbox" })
+-- Register widget
+vicious.register(datewidget, vicious.widgets.date, "%b %d, %R", 60)
+
+
+
+--  Network usage widget
+-- Initialize widget
+netwidget = widget({ type = "textbox" })
+ -- Register widget
+vicious.register(netwidget, vicious.widgets.net, ' Wlan0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span> ', 3)
 
 
 
@@ -188,10 +194,12 @@ for s = 1, screen.count() do
             layout = awful.widget.layout.horizontal.leftright
         },
         mylayoutbox[s],
-        mytextclock,
+        -- mytextclock,
+        datewidget,
         s == 1 and mysystray or nil,
-         -- separator, memwidget,
-        separator, membar,
+        memwidget,
+        cpuwidget,
+        netwidget,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
