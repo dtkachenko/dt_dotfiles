@@ -10,9 +10,12 @@ require("naughty")
 -- Load Debian menu entries
 require("debian.menu")
 
+-- sudo aptitude install awesome-extra
+require("vicious")
+
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init("/usr/share/awesome/themes/default/theme.lua")
+beautiful.init("/home/dtkachenko/.config/awesome/themes/zenburn/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 -- terminal = "x-terminal-emulator"
@@ -125,6 +128,36 @@ mytasklist.buttons = awful.util.table.join(
                                               if client.focus then client.focus:raise() end
                                           end))
 
+
+-- {
+-- { Reusable separator
+separator = widget({ type = "imagebox" })
+separator.image = image(beautiful.widget_sep)
+-- }}}
+
+
+-- Initialize widget
+memwidget = widget({ type = "textbox" })
+-- Register widget
+vicious.register(memwidget, vicious.widgets.mem, "$1% ($2MB/$3MB)", 13)
+
+--- { Memory usage
+memicon = widget({ type = "imagebox" })
+memicon.image = image(beautiful.widget_mem)
+-- Initialize widget
+membar = awful.widget.progressbar()
+-- Pogressbar properties
+membar:set_vertical(true):set_ticks(true)
+membar:set_height(12):set_width(8):set_ticks_size(2)
+membar:set_background_color(beautiful.fg_off_widget)
+membar:set_gradient_colors({ beautiful.fg_widget,
+   beautiful.fg_center_widget, beautiful.fg_end_widget
+   }) -- Register widget
+   vicious.register(membar, vicious.widgets.mem, "$1", 13)
+-- }}}
+
+
+
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
     mypromptbox[s] = awful.widget.prompt({ layout = awful.widget.layout.horizontal.leftright })
@@ -157,6 +190,8 @@ for s = 1, screen.count() do
         mylayoutbox[s],
         mytextclock,
         s == 1 and mysystray or nil,
+         -- separator, memwidget,
+        separator, membar,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
@@ -351,8 +386,9 @@ client.add_signal("manage", function (c, startup)
     end
 end)
 
+
 awful.util.spawn_with_shell("wmname LG3D")
-awful.util.spawn_with_shell("gnome-setting-daemon &")
+awful.util.spawn_with_shell("gnome-settings-daemon &")
 -- awful.util.spawn_with_shell("nm-applet &")
 
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
