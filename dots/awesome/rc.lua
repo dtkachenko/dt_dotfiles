@@ -154,14 +154,17 @@ datewidget = widget({ type = "textbox" })
 -- Register widget
 vicious.register(datewidget, vicious.widgets.date, "%b %d, %R", 60)
 
-
+host = io.lines("/proc/sys/kernel/hostname")()
 
 --  Network usage widget
 -- Initialize widget
 netwidget = widget({ type = "textbox" })
  -- Register widget
+if host == 'dtkachenko-laptop' then
 vicious.register(netwidget, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
-
+else
+vicious.register(netwidget, vicious.widgets.net, 'E0: <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
+end
 
 
 for s = 1, screen.count() do
@@ -400,8 +403,8 @@ end)
 
 
 awful.util.spawn_with_shell("wmname LG3D")
-awful.util.spawn_with_shell("gnome-settings-daemon &")
--- awful.util.spawn_with_shell("nm-applet &")
+awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep nm-applet ; then  gnome-settings-daemon  ; fi")
+awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep nm-applet ; then  nm-applet  ; fi")
 
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
