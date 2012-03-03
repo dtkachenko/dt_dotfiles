@@ -132,7 +132,7 @@ mytasklist.buttons = awful.util.table.join(
 -- {
 -- { Reusable separator
 separator = widget({ type = "imagebox" })
-separator.image = image(beautiful.widget_sep)
+separator.image = image(beautiful.separator)
 -- }}}
 
 
@@ -140,14 +140,14 @@ separator.image = image(beautiful.widget_sep)
 memwidget = widget({ type = "textbox" })
 -- Register widget
 -- vicious.register(memwidget, vicious.widgets.mem, " Mem: $1% ($2MB/$3MB)", 13)
-vicious.register(memwidget, vicious.widgets.mem, " Mem: $1% ", 13)
+vicious.register(memwidget, vicious.widgets.mem, "M: $1%", 13)
 
 
 
 -- Initialize widget
 cpuwidget = widget({ type = "textbox" })
 -- Register widget
-vicious.register(cpuwidget, vicious.widgets.cpu, " Cpu: $1% ")
+vicious.register(cpuwidget, vicious.widgets.cpu, "C: $1%")
 
 -- Initialize widget
 datewidget = widget({ type = "textbox" })
@@ -160,7 +160,7 @@ vicious.register(datewidget, vicious.widgets.date, "%b %d, %R", 60)
 -- Initialize widget
 netwidget = widget({ type = "textbox" })
  -- Register widget
-vicious.register(netwidget, vicious.widgets.net, ' Wlan0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span> ', 3)
+vicious.register(netwidget, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
 
 
 
@@ -197,9 +197,13 @@ for s = 1, screen.count() do
         -- mytextclock,
         datewidget,
         s == 1 and mysystray or nil,
+        separator,
         memwidget,
+        separator,
         cpuwidget,
+        separator,
         netwidget,
+        separator,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }

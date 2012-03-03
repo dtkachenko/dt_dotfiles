@@ -123,4 +123,6 @@ theme.titlebar_maximized_button_normal_inactive = "/usr/share/awesome/themes/zen
 -- }}}
 -- }}}
 
+theme.separator = "~/.config/awesome/icons/separator.png"
+
 return theme
