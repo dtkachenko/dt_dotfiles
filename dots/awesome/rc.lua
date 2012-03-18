@@ -405,6 +405,7 @@ end)
 awful.util.spawn_with_shell("wmname LG3D")
 awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep nm-applet ; then  gnome-settings-daemon  ; fi")
 awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep nm-applet ; then  nm-applet  ; fi")
+awful.util.spawn_with_shell("dropbox start")
 
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
