@@ -166,6 +166,26 @@ else
 vicious.register(netwidget, vicious.widgets.net, 'E0: <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
 end
 
+--Keyboard widget
+kbdcfg = {}
+kbdcfg.cmd = "setxkbmap"
+
+--list your own keyboard layouts here
+kbdcfg.layout = { "us","ru" }
+
+kbdcfg.current = 1
+kbdcfg.widget = widget({ type = "textbox", align = "right" })
+kbdcfg.widget.text = " " .. kbdcfg.layout[kbdcfg.current] .. " "
+kbdcfg.switch = function ()
+    kbdcfg.current = kbdcfg.current % #(kbdcfg.layout) + 1
+        local t = " " .. kbdcfg.layout[kbdcfg.current] .. " "
+            kbdcfg.widget.text = t
+                os.execute( kbdcfg.cmd .. t )
+                end
+
+                kbdcfg.widget:buttons(awful.util.table.join(
+                    awful.button({ }, 1, function () kbdcfg.switch() end)
+                    ))
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
@@ -206,6 +226,8 @@ for s = 1, screen.count() do
         cpuwidget,
         separator,
         netwidget,
+        separator,
+        kbdcfg.widget,
         separator,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
@@ -271,6 +293,12 @@ globalkeys = awful.util.table.join(
 
     -- Prompt
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
+
+    -- Sound control
+    awful.key({ }, "XF86AudioRaiseVolume", function () volumecfg.up() end),
+    awful.key({ }, "XF86AudioLowerVolume", function () volumecfg.down() end),
+    awful.key({ }, "XF86AudioMute", function () volumecfg.toggle() end),
+
 
     awful.key({ modkey }, "x",
               function ()
@@ -403,10 +431,15 @@ end)
 
 
 awful.util.spawn_with_shell("wmname LG3D")
-awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep gnome-settings-daemon ; then  gnome-settings-daemon  ; fi")
-awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep nm-applet ; then  nm-applet  ; fi")
-awful.util.spawn_with_shell("dropbox start")
+--awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep gnome-settings-daemon ; then  gnome-settings-daemon  ; fi")
+--awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep nm-applet ; then  nm-applet  ; fi")
+awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep wicd-client ; then  wicd-client -t  ; fi")
+--awful.util.spawn_with_shell("dropbox start")
 
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+--
+--
+-- Aperance tool "lxappearance"
+-- Network management ""wicd-clinet -t""
