@@ -22,12 +22,9 @@ beautiful.init("/home/dtkachenko/.config/awesome/themes/zenburn/theme.lua")
 terminal = "terminator"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
+host = io.lines("/proc/sys/kernel/hostname")()
 
 -- Default modkey.
--- Usually, Mod4 is the key with a logo between Control and Alt.
--- If you do not like this or do not have such a key,
--- I suggest you to remap Mod4 to another key using xmodmap or other tools.
--- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
@@ -35,14 +32,6 @@ layouts =
 {
     awful.layout.suit.floating,
     awful.layout.suit.tile,
-  --  awful.layout.suit.tile.left,
-  --  awful.layout.suit.tile.bottom,
-  --  awful.layout.suit.tile.top,
-  --  awful.layout.suit.fair,
-  --  awful.layout.suit.fair.horizontal,
-  --  awful.layout.suit.spiral,
-  --  awful.layout.suit.spiral.dwindle,
-  --  awful.layout.suit.max,
     awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier
 }
@@ -77,29 +66,32 @@ mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
 -- }}}
 
 -- {{{ Wibox
--- Create a textclock widget
-mytextclock = awful.widget.textclock({ align = "right" })
-
+-- }}}
 -- Create a systray
+-- {{{
 mysystray = widget({ type = "systray" })
-
+-- }}}
 -- battery widget
+-- {{{
 has_battery = awful.util.file_readable("/sys/class/power_supply/BAT0")
-
 batwidget = widget({ type = "textbox" })
 vicious.register(batwidget, vicious.widgets.bat, "B: $1/$2", 10, "BAT0")
-
---gmailwidget
+-- }}}
+-- Gmailwidget
+-- {{{
+-- in .netrc login and password format
+-- machine mail.google.com login user@mail password pass
 mygmail = widget({ type = "textbox" })
 mygmail_t = awful.tooltip({ objects = { mygmail }, })
 vicious.register(mygmail, vicious.widgets.gmail,
       function (widget, args)
         mygmail_t:set_text(args["{subject}"])
-        return ' g: <span color="white" weight="bold">'..args["{count}"]..'</span> | '
+        return ' G: <span color="white" weight="bold">'..args["{count}"]..'</span> '
         end, 10)
-
+-- }}}
 
 -- Create a wibox for each screen and add it
+-- {{{
 mywibox = {}
 mypromptbox = {}
 mylayoutbox = {}
@@ -143,50 +135,38 @@ mytasklist.buttons = awful.util.table.join(
                                               awful.client.focus.byidx(-1)
                                               if client.focus then client.focus:raise() end
                                           end))
-
-
--- {
--- { Reusable separator
+-- }}}
+-- Reusable separator
+-- {{{
 separator = widget({ type = "imagebox" })
 separator.image = image(beautiful.separator)
 -- }}}
-
-
--- Initialize widget
+-- Memory widget
+-- {{{
 memwidget = widget({ type = "textbox" })
--- Register widget
--- vicious.register(memwidget, vicious.widgets.mem, " Mem: $1% ($2MB/$3MB)", 13)
 vicious.register(memwidget, vicious.widgets.mem, "M: $1%", 13)
-
-
-
--- Initialize widget
+-- }}}
+-- Cpu widget
+-- {{{
 cpuwidget = widget({ type = "textbox" })
--- Register widget
 vicious.register(cpuwidget, vicious.widgets.cpu, "C: $1%")
-
--- Initialize widget
+--}}}
+-- Date widget
+-- {{{
 datewidget = widget({ type = "textbox" })
--- Register widget
 vicious.register(datewidget, vicious.widgets.date, "%b %d, %R", 60)
-
-host = io.lines("/proc/sys/kernel/hostname")()
-
---  Network usage widget
--- Initialize widget
+-- }}}
+-- Network usage widget
+-- {{{
 netwidget = widget({ type = "textbox" })
- -- Register widget
 if host == 'dtkachenko-laptop' then
-vicious.register(netwidget, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
+  vicious.register(netwidget, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
 else
-vicious.register(netwidget, vicious.widgets.net, 'E0: <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
+  vicious.register(netwidget, vicious.widgets.net, 'E0: <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
 end
-
---Keyboard widget
-kbdcfg = {}
-kbdcfg.cmd = "setxkbmap"
-
-
+-- }}}
+-- Volume vidget
+-- {{{
 volumecfg = {}
 volumecfg.cardid  = 0
 volumecfg.channel = "Master"
@@ -225,10 +205,13 @@ volumecfg.widget:buttons(awful.util.table.join(
        awful.button({ }, 1, function () volumecfg.toggle() end)
 ))
 volumecfg.update()
+-- }}}
 
---list your own keyboard layouts here
+-- Keyboard widget
+-- {{{
+kbdcfg = {}
+kbdcfg.cmd = "setxkbmap"
 kbdcfg.layout = { "us","ru" }
-
 kbdcfg.current = 1
 kbdcfg.widget = widget({ type = "textbox", align = "right" })
 kbdcfg.widget.text = " " .. kbdcfg.layout[kbdcfg.current] .. " "
@@ -238,10 +221,10 @@ kbdcfg.switch = function ()
     kbdcfg.widget.text = t
     os.execute( kbdcfg.cmd .. t )
 end
-
 kbdcfg.widget:buttons(awful.util.table.join(
     awful.button({ }, 1, function () kbdcfg.switch() end)
     ))
+-- }}}
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
@@ -261,7 +244,6 @@ for s = 1, screen.count() do
     mytasklist[s] = awful.widget.tasklist(function(c)
                                               return awful.widget.tasklist.label.currenttags(c, s)
                                           end, mytasklist.buttons)
-
     -- Create the wibox
     mywibox[s] = awful.wibox({ position = "top", screen = s })
     -- Add widgets to the wibox - order matters
@@ -273,29 +255,35 @@ for s = 1, screen.count() do
             layout = awful.widget.layout.horizontal.leftright
         },
         mylayoutbox[s],
-        -- mytextclock,
         datewidget,
         s == 1 and mysystray or nil,
         has_battery and separator,
         has_battery and batwidget,
-        separator,
-        volumecfg.widget,
-        separator,
-        mygmail,
-        separator,
-        memwidget,
-        separator,
-        cpuwidget,
-        separator,
-        netwidget,
-        separator,
-        kbdcfg.widget,
-        separator,
-        mytasklist[s],
+        separator, volumecfg.widget,
+        separator, mygmail,
+        separator, memwidget,
+        separator, cpuwidget,
+        separator, netwidget,
+        separator, kbdcfg.widget,
+        separator, mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
 end
 -- }}}
+
+function lock_screen()
+  os.execute("gnome-screensaver-command --lock && sleep 5")
+end
+
+function suspend()
+  lock_screen()
+  os.execute("sudo pm-suspend")
+end
+
+function hibernate()
+  lock_screen()
+  os.execute("sudo pm-hibernate")
+end
 
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
@@ -360,6 +348,10 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "XF86AudioRaiseVolume", function () volumecfg.up() end),
     awful.key({ }, "XF86AudioLowerVolume", function () volumecfg.down() end),
     awful.key({ }, "XF86AudioMute", function () volumecfg.toggle() end),
+
+    -- screen and power control
+    awful.key({ modkey, "Mod1" }, "l", function () lock_screen() end ),
+    awful.key({ }, "XF86Sleep", function () suspend() end ),
 
     -- layout widget key binding
     awful.key({ "Mod1" }, "Shift_R", function () kbdcfg.switch() end ),
@@ -463,10 +455,10 @@ awful.rules.rules = {
     -- Set Firefox to always map on tags number 2 of screen 1.
     { rule = { class = "Firefox" },
       properties = { tag = tags[1][2],
-                      floating = false } },
+                     floating = false } },
     { rule = { class = "Google-chrome" },
       properties = { tag = tags[1][9],
-                      floating = true } },
+                     floating = true } },
     { rule = { class = "Skype" },
       properties = { tag = tags[1][3] } },
 }
@@ -499,12 +491,9 @@ client.add_signal("manage", function (c, startup)
     end
 end)
 
-
+-- {{{ After startup
 awful.util.spawn_with_shell("wmname LG3D")
---awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep gnome-settings-daemon ; then  gnome-settings-daemon  ; fi")
---awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep nm-applet ; then  nm-applet  ; fi")
 awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep wicd-client ; then  wicd-client -t  ; fi")
---awful.util.spawn_with_shell("dropbox start")
 
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
@@ -514,7 +503,7 @@ client.add_signal("unfocus", function(c) c.border_color = beautiful.border_norma
 awful.hooks.timer.register(60, function ()
          volumecfg.update()
        end)
---
---
+-- Screen lock command "gnome-screensaver-command --lock && sleep 5"
+-- Sound configureation tool "pavucontrol"
 -- Aperance tool "lxappearance"
 -- Network management ""wicd-clinet -t""
