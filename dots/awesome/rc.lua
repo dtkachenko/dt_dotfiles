@@ -300,6 +300,10 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "XF86AudioMute", function () volumecfg.toggle() end),
 
 
+    awful.key({"Shift"}, "Alt_L", function () kbdcfg.switch() end ),
+    awful.key({"Shif_L", }, "Shift_R", function () kbdcfg.switch() end ),
+    awful.key({"Mod1"}, "Return", function () awful.util.span(terminal) end ),
+
     awful.key({ modkey }, "x",
               function ()
                   awful.prompt.run({ prompt = "Run Lua code: " },
@@ -307,6 +311,7 @@ globalkeys = awful.util.table.join(
                   awful.util.eval, nil,
                   awful.util.getdir("cache") .. "/history_eval")
               end)
+
 )
 
 clientkeys = awful.util.table.join(
@@ -387,7 +392,8 @@ awful.rules.rules = {
                      focus = true,
                      keys = clientkeys,
                      buttons = clientbuttons,
-                     size_hints_honor = false } },
+                     size_hints_honor = false,
+                     floating = false} },
     { rule = { class = "MPlayer" },
       properties = { floating = true } },
     { rule = { class = "pinentry" },
@@ -396,8 +402,12 @@ awful.rules.rules = {
       properties = { floating = true } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     { rule = { class = "Firefox" },
-      properties = { tag = tags[1][2] } },
-    { rule = { class = "skype" },
+      properties = { tag = tags[1][2],
+                      floating = false } },
+    { rule = { class = "Google-chrome" },
+      properties = { tag = tags[1][9],
+                      floating = false } },
+    { rule = { class = "Skype" },
       properties = { tag = tags[1][3] } },
 }
 -- }}}
