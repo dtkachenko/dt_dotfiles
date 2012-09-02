@@ -83,6 +83,12 @@ mytextclock = awful.widget.textclock({ align = "right" })
 -- Create a systray
 mysystray = widget({ type = "systray" })
 
+-- battery widget
+has_battery = awful.util.file_readable("/sys/class/power_supply/BAT0")
+
+batwidget = widget({ type = "textbox" })
+vicious.register(batwidget, vicious.widgets.bat, "B: $1/$2", 10, "BAT0")
+
 -- Create a wibox for each screen and add it
 mywibox = {}
 mypromptbox = {}
@@ -170,6 +176,46 @@ end
 kbdcfg = {}
 kbdcfg.cmd = "setxkbmap"
 
+
+volumecfg = {}
+volumecfg.cardid  = 0
+volumecfg.channel = "Master"
+volumecfg.widget = widget({ type = "textbox", name = "volumecfg.widget", align = "right" })
+-- command must start with a space!
+volumecfg.mixercommand = function (command)
+       local fd = io.popen("amixer -c " .. volumecfg.cardid .. command)
+       local status = fd:read("*all")
+       fd:close()
+       local volume = string.match(status, "(%d?%d?%d)%%")
+       volume = string.format("S:% 3d", volume)
+       status = string.match(status, "%[(o[^%]]*)%]")
+       if string.find(status, "on", 1, true) then
+               volume = volume .. "%"
+       else
+               volume = volume .. "M"
+       end
+       volumecfg.widget.text = volume
+end
+volumecfg.update = function ()
+       volumecfg.mixercommand(" sget " .. volumecfg.channel)
+end
+volumecfg.up = function ()
+       volumecfg.mixercommand(" sset " .. volumecfg.channel .. " 5%+")
+end
+volumecfg.down = function ()
+       volumecfg.mixercommand(" sset " .. volumecfg.channel .. " 5%-")
+end
+volumecfg.toggle = function ()
+       -- volumecfg.mixercommand(" sset " .. volumecfg.channel .. " toggle")
+       volumecfg.mixercommand(" sset " .. volumecfg.channel .. " 0% ")
+end
+volumecfg.widget:buttons(awful.util.table.join(
+       awful.button({ }, 4, function () volumecfg.up() end),
+       awful.button({ }, 5, function () volumecfg.down() end),
+       awful.button({ }, 1, function () volumecfg.toggle() end)
+))
+volumecfg.update()
+
 --list your own keyboard layouts here
 kbdcfg.layout = { "us","ru" }
 
@@ -178,14 +224,14 @@ kbdcfg.widget = widget({ type = "textbox", align = "right" })
 kbdcfg.widget.text = " " .. kbdcfg.layout[kbdcfg.current] .. " "
 kbdcfg.switch = function ()
     kbdcfg.current = kbdcfg.current % #(kbdcfg.layout) + 1
-        local t = " " .. kbdcfg.layout[kbdcfg.current] .. " "
-            kbdcfg.widget.text = t
-                os.execute( kbdcfg.cmd .. t )
-                end
+    local t = " " .. kbdcfg.layout[kbdcfg.current] .. " "
+    kbdcfg.widget.text = t
+    os.execute( kbdcfg.cmd .. t )
+end
 
-                kbdcfg.widget:buttons(awful.util.table.join(
-                    awful.button({ }, 1, function () kbdcfg.switch() end)
-                    ))
+kbdcfg.widget:buttons(awful.util.table.join(
+    awful.button({ }, 1, function () kbdcfg.switch() end)
+    ))
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
@@ -220,6 +266,10 @@ for s = 1, screen.count() do
         -- mytextclock,
         datewidget,
         s == 1 and mysystray or nil,
+        has_battery and separator,
+        has_battery and batwidget,
+        separator,
+        volumecfg.widget,
         separator,
         memwidget,
         separator,
@@ -299,10 +349,8 @@ globalkeys = awful.util.table.join(
     awful.key({ }, "XF86AudioLowerVolume", function () volumecfg.down() end),
     awful.key({ }, "XF86AudioMute", function () volumecfg.toggle() end),
 
-
-    awful.key({"Shift"}, "Alt_L", function () kbdcfg.switch() end ),
-    awful.key({"Shif_L", }, "Shift_R", function () kbdcfg.switch() end ),
-    awful.key({"Mod1"}, "Return", function () awful.util.span(terminal) end ),
+    -- layout widget key binding
+    awful.key({ "Mod1" }, "Shift_R", function () kbdcfg.switch() end ),
 
     awful.key({ modkey }, "x",
               function ()
@@ -406,7 +454,7 @@ awful.rules.rules = {
                       floating = false } },
     { rule = { class = "Google-chrome" },
       properties = { tag = tags[1][9],
-                      floating = false } },
+                      floating = true } },
     { rule = { class = "Skype" },
       properties = { tag = tags[1][3] } },
 }
@@ -449,6 +497,11 @@ awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep wicd-client ; the
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+
+awful.hooks.timer.register(60, function ()
+         volumecfg.update()
+       end)
 --
 --
 -- Aperance tool "lxappearance"
