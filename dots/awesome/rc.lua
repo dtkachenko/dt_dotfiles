@@ -89,6 +89,16 @@ has_battery = awful.util.file_readable("/sys/class/power_supply/BAT0")
 batwidget = widget({ type = "textbox" })
 vicious.register(batwidget, vicious.widgets.bat, "B: $1/$2", 10, "BAT0")
 
+--gmailwidget
+mygmail = widget({ type = "textbox" })
+mygmail_t = awful.tooltip({ objects = { mygmail }, })
+vicious.register(mygmail, vicious.widgets.gmail,
+      function (widget, args)
+        mygmail_t:set_text(args["{subject}"])
+        return ' g: <span color="white" weight="bold">'..args["{count}"]..'</span> | '
+        end, 10)
+
+
 -- Create a wibox for each screen and add it
 mywibox = {}
 mypromptbox = {}
@@ -270,6 +280,8 @@ for s = 1, screen.count() do
         has_battery and batwidget,
         separator,
         volumecfg.widget,
+        separator,
+        mygmail,
         separator,
         memwidget,
         separator,
