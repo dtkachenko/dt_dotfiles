@@ -205,7 +205,96 @@ volumecfg.widget:buttons(awful.util.table.join(
        awful.button({ }, 1, function () volumecfg.toggle() end)
 ))
 volumecfg.update()
+
+awful.hooks.timer.register(60, function ()
+      volumecfg.update()
+end)
 -- }}}
+
+-- pomodoro timer widget
+pomodoro = {}
+-- tweak these values in seconds to your liking
+pomodoro.pause_duration = 300
+pomodoro.work_duration = 1500
+
+pomodoro.pause_title = "Pause finished."
+pomodoro.pause_text = "Get back to work!"
+pomodoro.work_title = "Pomodoro finished."
+pomodoro.work_text = "Time for a pause!"
+pomodoro.working = true
+pomodoro.left = pomodoro.work_duration
+pomodoro.widget = widget({ type = "textbox" })
+pomodoro.timer = timer { timeout = 1 }
+
+function pomodoro:start()
+pomodoro.last_time = os.time()
+pomodoro.timer:start()
+end
+
+function pomodoro:stop()
+pomodoro.timer:stop()
+end
+
+function pomodoro:reset()
+pomodoro.timer:stop()
+pomodoro.left = pomodoro.work_duration
+pomodoro:settime(pomodoro.work_duration)
+end
+
+function pomodoro:settime(t)
+  if t >= 3600 then -- more than one hour!
+    t = os.date("%X", t-3600)
+  else
+    t = os.date("%M:%S", t)
+  end
+  self.widget.text = string.format("Pomodoro: <b>%s</b>", t)
+end
+
+function pomodoro:notify(title, text, duration, working)
+  naughty.notify {
+    bg = "#ff0000",
+    fg = "#ffffff",
+    font = "Verdana 20",
+    screen = mouse.screen,
+    title = title,
+    text = text,
+    timeout = 10,
+--    icon = "/usr/share/app-install/icons/_usr_share_pixmaps_tomatoes_icon.png"
+  }
+
+  pomodoro.left = duration
+  pomodoro:settime(duration)
+  pomodoro.working = working
+end
+
+pomodoro:settime(pomodoro.work_duration)
+
+pomodoro.widget:buttons(
+  awful.util.table.join(
+    awful.button({ }, 1, function() pomodoro:start() end),
+    awful.button({ }, 2, function() pomodoro:stop() end),
+    awful.button({ }, 3, function() pomodoro:reset() end)
+))
+
+pomodoro.timer:add_signal("timeout", function()
+  local now = os.time()
+  pomodoro.left = pomodoro.left - (now - pomodoro.last_time)
+  pomodoro.last_time = now
+
+  if pomodoro.left > 0 then
+    pomodoro:settime(pomodoro.left)
+  else
+    if pomodoro.working then
+      pomodoro:notify(pomodoro.work_title, pomodoro.work_text,
+pomodoro.pause_duration, false)
+    else
+      pomodoro:notify(pomodoro.pause_title, pomodoro.pause_text,
+        pomodoro.work_duration, true)
+    end
+    pomodoro.timer:stop()
+  end
+end)
+
 
 -- Keyboard widget
 -- {{{
@@ -265,6 +354,7 @@ for s = 1, screen.count() do
         separator, cpuwidget,
         separator, netwidget,
         separator, kbdcfg.widget,
+        separator, pomodoro.widget,
         separator, mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
@@ -352,6 +442,11 @@ globalkeys = awful.util.table.join(
     -- screen and power control
     awful.key({ modkey, "Mod1" }, "l", function () lock_screen() end ),
     awful.key({ }, "XF86Sleep", function () suspend() end ),
+
+    -- Pomodoro
+    awful.key({ modkey }, "F9", function () pomodoro:start() end),
+    awful.key({ modkey }, "F10", function () pomodoro:stop() end),
+    awful.key({ modkey }, "F11", function () pomodoro:reset() end),
 
     -- layout widget key binding
     awful.key({ "Mod1" }, "Shift_R", function () kbdcfg.switch() end ),
@@ -499,10 +594,6 @@ client.add_signal("focus", function(c) c.border_color = beautiful.border_focus e
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-
-awful.hooks.timer.register(60, function ()
-         volumecfg.update()
-       end)
 -- Screen lock command "gnome-screensaver-command --lock && sleep 5"
 -- Sound configureation tool "pavucontrol"
 -- Aperance tool "lxappearance"
