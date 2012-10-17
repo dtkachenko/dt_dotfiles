@@ -158,10 +158,11 @@ vicious.register(datewidget, vicious.widgets.date, "%b %d, %R", 60)
 -- }}}
 -- Network usage widget
 -- {{{
-netwidgete = widget({ type = "textbox" })
-vicious.register(netwidgete, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
+is_laptop = host == 'dtkachenko-laptop'
 netwidgetw = widget({ type = "textbox" })
-vicious.register(netwidgetw, vicious.widgets.net, 'E0: <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
+vicious.register(netwidgetw, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
+netwidgete = widget({ type = "textbox" })
+vicious.register(netwidgete, vicious.widgets.net, 'E0: <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
 --if host == 'dtkachenko-laptop' then
 --  vicious.register(netwidget, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
 --else
@@ -373,7 +374,8 @@ for s = 1, screen.count() do
         separator, memwidget,
         separator, cpuwidget,
         separator, netwidgete,
-        separator, netwidgetw,
+        is_laptop and separator, 
+	is_laptop and netwidgetw,
         --separator, kbdcfg.widget,
         separator, kbdwidget,
         separator, pomodoro.widget,
