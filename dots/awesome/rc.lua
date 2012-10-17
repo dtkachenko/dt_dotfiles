@@ -150,7 +150,7 @@ vicious.register(memwidget, vicious.widgets.mem, "M: $1%", 13)
 -- {{{
 cpuwidget = widget({ type = "textbox" })
 vicious.register(cpuwidget, vicious.widgets.cpu, "C: $1%")
---}}}
+-- }}}
 -- Date widget
 -- {{{
 datewidget = widget({ type = "textbox" })
@@ -158,12 +158,15 @@ vicious.register(datewidget, vicious.widgets.date, "%b %d, %R", 60)
 -- }}}
 -- Network usage widget
 -- {{{
-netwidget = widget({ type = "textbox" })
-if host == 'dtkachenko-laptop' then
-  vicious.register(netwidget, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
-else
-  vicious.register(netwidget, vicious.widgets.net, 'E0: <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
-end
+netwidgete = widget({ type = "textbox" })
+vicious.register(netwidgete, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
+netwidgetw = widget({ type = "textbox" })
+vicious.register(netwidgetw, vicious.widgets.net, 'E0: <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
+--if host == 'dtkachenko-laptop' then
+--  vicious.register(netwidget, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
+--else
+--  vicious.register(netwidget, vicious.widgets.net, 'E0: <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
+--end
 -- }}}
 -- Volume vidget
 -- {{{
@@ -296,24 +299,41 @@ pomodoro.pause_duration, false)
 end)
 
 
--- Keyboard widget
--- {{{
-kbdcfg = {}
-kbdcfg.cmd = "setxkbmap"
-kbdcfg.layout = { "us","ru" }
-kbdcfg.current = 1
-kbdcfg.widget = widget({ type = "textbox", align = "right" })
-kbdcfg.widget.text = " " .. kbdcfg.layout[kbdcfg.current] .. " "
-kbdcfg.switch = function ()
-    kbdcfg.current = kbdcfg.current % #(kbdcfg.layout) + 1
-    local t = " " .. kbdcfg.layout[kbdcfg.current] .. " "
-    kbdcfg.widget.text = t
-    os.execute( kbdcfg.cmd .. t )
-end
-kbdcfg.widget:buttons(awful.util.table.join(
-    awful.button({ }, 1, function () kbdcfg.switch() end)
-    ))
--- }}}
+---- Keyboard widget
+---- {{{
+--kbdcfg = {}
+--kbdcfg.cmd = "setxkbmap"
+--kbdcfg.layout = { "us","ru" }
+--kbdcfg.current = 1
+--kbdcfg.widget = widget({ type = "textbox", align = "right" })
+--kbdcfg.widget.text = " " .. kbdcfg.layout[kbdcfg.current] .. " "
+--kbdcfg.switch = function ()
+--    kbdcfg.current = kbdcfg.current % #(kbdcfg.layout) + 1
+--    local t = " " .. kbdcfg.layout[kbdcfg.current] .. " "
+--    kbdcfg.widget.text = t
+--    os.execute( kbdcfg.cmd .. t )
+--end
+--kbdcfg.widget:buttons(awful.util.table.join(
+--    awful.button({ }, 1, function () kbdcfg.switch() end)
+--    ))
+---- }}}
+
+-- Keyboard layout widget
+kbdwidget = widget({type = "textbox", name = "kbdwidget"})
+kbdwidget.border_width = 1
+--kbdwidget.border_color = beautiful.fg_normal
+kbdwidget.text = " Eng "
+
+dbus.request_name("session", "ru.gentoo.kbdd")
+dbus.add_match("session", "interface='ru.gentoo.kbdd',member='layoutChanged'")
+dbus.add_signal("ru.gentoo.kbdd", function(...)
+    local data = {...}
+    local layout = data[2]
+    lts = {[0] = "Eng", [1] = "Рус"}
+    kbdwidget.text = " "..lts[layout].." "
+    end
+)
+
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
@@ -352,8 +372,10 @@ for s = 1, screen.count() do
         separator, mygmail,
         separator, memwidget,
         separator, cpuwidget,
-        separator, netwidget,
-        separator, kbdcfg.widget,
+        separator, netwidgete,
+        separator, netwidgetw,
+        --separator, kbdcfg.widget,
+        separator, kbdwidget,
         separator, pomodoro.widget,
         separator, mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
@@ -448,8 +470,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey }, "F10", function () pomodoro:stop() end),
     awful.key({ modkey }, "F11", function () pomodoro:reset() end),
 
-    -- layout widget key binding
-    awful.key({ "Mod1" }, "Shift_R", function () kbdcfg.switch() end ),
+--    -- layout widget key binding
+--    awful.key({ "Mod1" }, "Shift_R", function () kbdcfg.switch() end ),
 
     awful.key({ modkey }, "x",
               function ()
@@ -589,6 +611,9 @@ end)
 -- {{{ After startup
 awful.util.spawn_with_shell("wmname LG3D")
 awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep wicd-client ; then  wicd-client -t  ; fi")
+awful.util.spawn_with_shell("kbdd")
+awful.util.spawn_with_shell("setxkbmap -layout \"us,ru\"")
+awful.util.spawn_with_shell("setxkbmap -option \"grp:caps_toggle,grp_led:caps\"")
 
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
