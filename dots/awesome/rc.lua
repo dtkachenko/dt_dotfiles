@@ -613,6 +613,7 @@ end)
 -- {{{ After startup
 awful.util.spawn_with_shell("wmname LG3D")
 awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep wicd-client ; then  wicd-client -t  ; fi")
+awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep parcellite ; then  parcellite  ; fi")
 awful.util.spawn_with_shell("kbdd")
 awful.util.spawn_with_shell("setxkbmap -layout \"us,ru\"")
 awful.util.spawn_with_shell("setxkbmap -option \"grp:caps_toggle,grp_led:caps\"")
