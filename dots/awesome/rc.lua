@@ -39,12 +39,22 @@ layouts =
 
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
-tags = {}
-for s = 1, screen.count() do
-    -- Each screen has its own tag table.
-    tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[2])
-end
+--for s = 1, screen.count() do
+--    -- Each screen has its own tag table.
+--    tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[2])
+--end
 -- }}}
+
+tags = {}
+tags[1] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 1, layouts[2])
+if screen.count() > 1 then
+    tags[2] = awful.tag({ 1 }, 2, layouts[2])
+end
+
+if host == "dtkachenko-laptop" then
+    awful.util.spawn_with_shell("xrandr --output LVDS1  --primary")
+end
+
 
 -- {{{ Menu
 -- Create a laucher widget and a main menu
