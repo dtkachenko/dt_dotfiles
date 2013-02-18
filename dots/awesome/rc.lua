@@ -15,7 +15,8 @@ require("vicious")
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init("/home/dtkachenko/.config/awesome/themes/zenburn/theme.lua")
+--beautiful.init("/home/dtkachenko/.config/awesome/themes/zenburn/theme.lua")
+beautiful.init("/home/dtkachenko/.config/awesome/themes/throne/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 -- terminal = "x-terminal-emulator"
@@ -154,12 +155,12 @@ separator.image = image(beautiful.separator)
 -- Memory widget
 -- {{{
 memwidget = widget({ type = "textbox" })
-vicious.register(memwidget, vicious.widgets.mem, "M: $1%", 13)
+vicious.register(memwidget, vicious.widgets.mem, "M $1%", 13)
 -- }}}
 -- Cpu widget
 -- {{{
 cpuwidget = widget({ type = "textbox" })
-vicious.register(cpuwidget, vicious.widgets.cpu, "C: $1%")
+vicious.register(cpuwidget, vicious.widgets.cpu, "C $1%")
 -- }}}
 -- Date widget
 -- {{{
@@ -170,9 +171,9 @@ vicious.register(datewidget, vicious.widgets.date, "%b %d, %R", 60)
 -- {{{
 is_laptop = host == 'dtkachenko-laptop'
 netwidgetw = widget({ type = "textbox" })
-vicious.register(netwidgetw, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
+vicious.register(netwidgetw, vicious.widgets.net, 'W0 <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
 netwidgete = widget({ type = "textbox" })
-vicious.register(netwidgete, vicious.widgets.net, 'E0: <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
+vicious.register(netwidgete, vicious.widgets.net, 'E0 <span color="#CC9393">${eth0 down_kb}</span> <span color="#7F9F7F">${eth0 up_kb}</span>', 3)
 --if host == 'dtkachenko-laptop' then
 --  vicious.register(netwidget, vicious.widgets.net, 'W0: <span color="#CC9393">${wlan0 down_kb}</span> <span color="#7F9F7F">${wlan0 up_kb}</span>', 3)
 --else
@@ -261,7 +262,7 @@ function pomodoro:settime(t)
   else
     t = os.date("%M:%S", t)
   end
-  self.widget.text = string.format("Pomodoro: <b>%s</b>", t)
+  self.widget.text = string.format("Pomodoro <b>%s</b>", t)
 end
 
 function pomodoro:notify(title, text, duration, working)
@@ -380,7 +381,7 @@ for s = 1, screen.count() do
         has_battery and separator,
         has_battery and batwidget,
         separator, volumecfg.widget,
-        separator, mygmail,
+--        separator, mygmail,
         separator, memwidget,
         separator, cpuwidget,
         separator, netwidgete,
@@ -388,7 +389,7 @@ for s = 1, screen.count() do
 	is_laptop and netwidgetw,
         --separator, kbdcfg.widget,
         separator, kbdwidget,
-        separator, pomodoro.widget,
+--        separator, pomodoro.widget,
         separator, mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }
@@ -625,6 +626,7 @@ awful.util.spawn_with_shell("wmname LG3D")
 awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep wicd-client ; then  wicd-client -t  ; fi")
 awful.util.spawn_with_shell("if ! ps -ef | grep -v grep | grep parcellite ; then  parcellite  ; fi")
 awful.util.spawn_with_shell("kbdd")
+awful.util.spawn_with_shell("gnome-settings-daemon")
 awful.util.spawn_with_shell("setxkbmap -layout \"us,ru\"")
 awful.util.spawn_with_shell("setxkbmap -option \"grp:caps_toggle,grp_led:caps\"")
 
