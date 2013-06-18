@@ -629,6 +629,7 @@ awful.util.spawn_with_shell("kbdd")
 awful.util.spawn_with_shell("gnome-settings-daemon")
 awful.util.spawn_with_shell("setxkbmap -layout \"us,ru\"")
 awful.util.spawn_with_shell("setxkbmap -option \"grp:caps_toggle,grp_led:caps\"")
+awful.util.spawn_with_shell("export BROWSER=/usr/bin/firefox")
 
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)

@@ -9,7 +9,7 @@
 -- {{{ Main
 theme = {}
 --theme.wallpaper_cmd = { "awsetbg /home/dtkachenko/.config/awesome/themes/zenburn/zenburn-background.png" }
-theme.wallpaper_cmd = { "awsetbg /home/dtkachenko/Downloads/tron_2-wallpaper-1366x768.jpg" }
+--theme.wallpaper_cmd = { "awsetbg /home/dtkachenko/Downloads/tron_2-wallpaper-1366x768.jpg" }
 -- }}}
 
 -- {{{ Styles
@@ -18,20 +18,25 @@ theme.font      = "Ubuntu Mono Bold 9"
 --theme.font      = "TlwgMono Bold 8"
 
 -- {{{ Colors
-theme.fg_normal = "#6FC3DF"
+theme.fg_normal = "#7090d0"
+--theme.fg_normal = "#D8D8D8"
+--theme.fg_normal = "#6FC3DF"
 --theme.fg_normal = "#006699"
 --theme.fg_normal = "#003366"
 --theme.fg_normal = "#3399FF"
 --theme.fg_normal = "#DCDCCC"
---theme.fg_focus  = "#F0DFAF"
-theme.fg_focus  = "#E6FFFF"
+theme.fg_focus  = "#EB8921"
+--theme.fg_focus  = "#F5AD28"
+--theme.fg_focus  = "#E6FFFF"
 --theme.fg_focus  = "#3399FF"
 theme.fg_urgent = "#DCDCCC"
 --theme.fg_urgent = "#CC9393"
 --theme.bg_normal = "#3F3F3F"
-theme.bg_normal = "#0C141F"
---theme.bg_focus  = "#1E2320"
-theme.bg_focus  = "#0C141F"
+theme.bg_normal = "#1c1c1c"
+--theme.bg_normal = "#252627"
+--theme.bg_normal = "#0C141F"
+theme.bg_focus  = "#252627"
+--theme.bg_focus  = "#0C141F"
 theme.bg_urgent = "#F62700"
 --theme.bg_urgent = "#3F3F3F"
 -- }}}
@@ -41,13 +46,16 @@ theme.border_width  = "2"
 --theme.border_normal = "#3F3F3F"
 theme.border_normal = "#006699"
 theme.border_focus  = "#3399FF"
+--theme.border_focus  = "#F5AD28"
 --theme.border_focus  = "#6F6F6F"
 theme.border_marked = "#CC9393"
 -- }}}
 
 -- {{{ Titlebars
 theme.titlebar_bg_focus  = "#3F3F3F"
-theme.titlebar_bg_normal = "#3F3F3F"
+theme.titlebar_bg_normal = "#1c1c1c"
+--theme.titlebar_bg_normal = "#7090d0"
+--theme.titlebar_bg_normal = "#3F3F3F"
 -- }}}
 
 -- There are other variable sets
