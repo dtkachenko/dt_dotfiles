@@ -14,8 +14,9 @@ theme = {}
 
 -- {{{ Styles
 --theme.font      = "sans 8"
-theme.font      = "Ubuntu Mono Bold 9"
---theme.font      = "TlwgMono Bold 8"
+--theme.font      = "Ubuntu Mono Bold 9"
+--theme.font      = "Droid Sans Mono 10"
+theme.font      = "TlwgMono Bold 8"
 
 -- {{{ Colors
 theme.fg_normal = "#7090d0"
